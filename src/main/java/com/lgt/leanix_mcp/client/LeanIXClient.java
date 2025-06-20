@@ -159,10 +159,12 @@ public class LeanIXClient {
             this.variables = variables;
         }
 
+        @SuppressWarnings("unused")
         public String getQuery() {
             return query;
         }
 
+        @SuppressWarnings("unused")
         public Map<String, Object> getVariables() {
             return variables;
         }
