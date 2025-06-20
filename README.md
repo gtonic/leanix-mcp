@@ -4,33 +4,39 @@ This project contains a Java/Spring Boot port of the JavaScript LeanIX GraphQL c
 
 ## Features
 
-- **Reactive Programming**: Uses Spring WebFlux and Project Reactor for non-blocking operations
-- **OAuth2 Authentication**: Handles client credentials flow automatically
-- **GraphQL Support**: Execute GraphQL queries with variables
-- **Spring Boot Integration**: Configured as Spring beans with property-based configuration
-- **Error Handling**: Comprehensive error handling and logging
-- **Type Safety**: Strongly typed with proper validation
+The following methods in `LeanIXService.java` are exposed as tools for use with an AI agent:
 
-## Project Structure
+- `getFactSheetsByType(String factSheetType)`: Get all fact sheets of a given type.
+- `searchFactSheetsByName(String searchTerm)`: Search for fact sheets by name.
+- `getWorkspaceInfo()`: Get information about the workspace.
+- `getFactSheetsByTypePaginated(String factSheetType, Integer first, String after)`: Get paginated fact sheets of a given type.
+- `getTypes()`: Get all available fact sheet types and their keys.
+- `getApplications()`: Get all applications with default pagination.
+- `getITComponents()`: Get all IT components with default pagination.
+- `getBusinessCapabilities()`: Get all business capabilities with default pagination.
+- `getProviders()`: Get all providers with default pagination.
+- `getOrganizations()`: Get all organizations with default pagination.
+- `getBusinessContexts()`: Get all business contexts with default pagination.
+- `getInterfaces()`: Get all interfaces with default pagination.
+- `getDataObjects()`: Get all data objects with default pagination.
 
-```
-src/
-├── main/java/com/lgt/leanix_mcp/
-│   ├── client/
-│   │   └── LeanIXClient.java          # Main GraphQL client
-│   ├── config/
-│   │   └── LeanIXClientConfig.java    # Spring configuration
-│   ├── service/
-│   │   └── LeanIXService.java         # Example service using the client
-│   └── LeanixMcpApplication.java      # Spring Boot main class
-├── test/java/com/lgt/leanix_mcp/
-│   └── client/
-│       └── LeanIXClientTest.java      # Unit tests
-└── resources/
-    └── application.properties         # Configuration properties
-```
 
-## Configuration
+## TODOs/know issues
+
+- explicitely model parent-child relations (to get hold of the subfactsheets)
+- support mutation (update, delete)
+
+
+## Building and Running
+
+### Prerequisites
+
+- Java 17 or higher
+- Maven 3.6.3 or higher
+- Docker (for containerization)
+- [Task](https://taskfile.dev/installation/) (optional, for simplified commands)
+
+### Configuration
 
 Update `src/main/resources/application.properties` with your LeanIX credentials:
 
@@ -38,184 +44,49 @@ Update `src/main/resources/application.properties` with your LeanIX credentials:
 # LeanIX Configuration
 leanix.subdomain=your-subdomain
 leanix.api-token=your-api-token
-
-# Optional: Enable debug logging
-logging.level.com.lgt.leanix_mcp.client.LeanIXClient=DEBUG
+leanix.pagination-default-size=50
 ```
 
-## Usage
+- `leanix.subdomain`: The subdomain of your LeanIX workspace (e.g., `my-company`).
+- `leanix.api-token`: Your LeanIX API token.
+- `leanix.pagination-default-size`: The default number of items to return for paginated queries.
 
-### Basic Usage
+### Using Taskfile
 
-The `LeanIXClient` is automatically configured as a Spring bean. Inject it into your services:
+The `Taskfile.yml` provides simplified commands for common operations:
 
-```java
-@Service
-@RequiredArgsConstructor
-public class MyService {
-    
-    private final LeanIXClient leanIXClient;
-    
-    public Mono<JsonNode> getWorkspaceInfo() {
-        String query = """
-            query GetWorkspaceInfo {
-              viewer {
-                id
-                email
-                account {
-                  id
-                  name
-                }
-              }
-            }
-            """;
-        
-        return leanIXClient.query(query);
-    }
-}
-```
+- **Clean and build the project:**
+  ```bash
+  task clean-build
+  ```
 
-### Query with Variables
+- **Build the Docker image:**
+  ```bash
+  task docker-build
+  ```
 
-```java
-public Mono<JsonNode> getFactSheetsByType(String factSheetType) {
-    String query = """
-        query GetFactSheetsByType($type: FactSheetType!) {
-          allFactSheets(factSheetType: $type) {
-            edges {
-              node {
-                id
-                name
-                displayName
-                type
-              }
-            }
-          }
-        }
-        """;
-    
-    Map<String, Object> variables = Map.of("type", factSheetType);
-    return leanIXClient.query(query, variables);
-}
-```
+- **Run the Docker container:**
+  ```bash
+  task docker-run
+  ```
 
-### Using the Example Service
+- **Publish the Docker image:**
+  ```bash
+  export DOCKER_REGISTRY=your-registry
+  export IMAGE_NAME=your-image-name
+  task docker-publish
+  ```
 
-The project includes `LeanIXService` with example methods:
+### Manual Build and Run
 
-```java
-@Autowired
-private LeanIXService leanIXService;
+If you don't have Task installed, you can use Maven directly:
 
-// Get all applications
-leanIXService.getFactSheetsByType("Application")
-    .subscribe(result -> {
-        // Process the result
-        System.out.println(result.toPrettyString());
-    });
+- **Clean and build the project:**
+  ```bash
+  mvn clean package
+  ```
 
-// Search for fact sheets
-leanIXService.searchFactSheetsByName("MyApp")
-    .subscribe(result -> {
-        // Process search results
-    });
-
-// Get workspace information
-leanIXService.getWorkspaceInfo()
-    .subscribe(result -> {
-        // Process workspace info
-    });
-```
-
-## API Reference
-
-### LeanIXClient
-
-#### Constructor
-```java
-public LeanIXClient(String subdomain, String apiToken)
-```
-
-#### Methods
-
-- `Mono<String> getAccessToken()` - Gets an OAuth2 access token
-- `Mono<JsonNode> query(String query)` - Executes a GraphQL query without variables
-- `Mono<JsonNode> query(String query, Map<String, Object> variables)` - Executes a GraphQL query with variables
-
-#### Getters
-- `String getSubdomain()` - Returns the configured subdomain
-- `String getBaseUrl()` - Returns the base LeanIX URL
-- `String getGraphqlEndpoint()` - Returns the GraphQL endpoint URL
-- `String getTokenEndpoint()` - Returns the OAuth2 token endpoint URL
-
-## Comparison with JavaScript Version
-
-| Feature | JavaScript | Java/Spring Boot |
-|---------|------------|------------------|
-| HTTP Client | fetch() | Spring WebFlux WebClient |
-| Async Pattern | async/await | Reactive Streams (Mono) |
-| GraphQL Client | graphql-request | Custom implementation |
-| Configuration | Constructor params | Spring @ConfigurationProperties |
-| Error Handling | try/catch | Reactive error operators |
-| Logging | console.log | SLF4J/Logback |
-
-## Dependencies
-
-The client uses the following key dependencies:
-
-- **Spring Boot WebFlux** - For reactive HTTP client
-- **Jackson** - For JSON processing
-- **Lombok** - For reducing boilerplate code
-- **SLF4J** - For logging
-
-## Building and Running
-
-```bash
-# Build the project
-mvn clean compile
-
-# Run tests
-mvn test
-
-# Run the application
-mvn spring-boot:run
-```
-
-## Error Handling
-
-The client includes comprehensive error handling:
-
-- **Authentication errors** - Logged with details about token endpoint and status
-- **GraphQL errors** - Logged with query details and response status
-- **Network errors** - Handled by WebClient with retry capabilities
-- **Validation errors** - Constructor validates required parameters
-
-## Logging
-
-Enable debug logging to see detailed request/response information:
-
-```properties
-logging.level.com.lgt.leanix_mcp.client.LeanIXClient=DEBUG
-```
-
-This will log:
-- Token requests and responses
-- GraphQL query execution
-- Error details with full context
-
-## Testing
-
-The project includes unit tests for:
-- Constructor validation
-- URL generation
-- Method signatures and return types
-
-For integration testing with real LeanIX APIs, update the test configuration with valid credentials.
-
-## Contributing
-
-1. Follow Spring Boot conventions
-2. Use reactive patterns (Mono/Flux)
-3. Include comprehensive error handling
-4. Add unit tests for new functionality
-5. Update documentation for API changes
+- **Run the application:**
+  ```bash
+  mvn spring-boot:run
+  ```
