@@ -31,7 +31,7 @@ The following methods in `LeanIXService.java` are exposed as tools for use with 
 
 ### Prerequisites
 
-- Java 17 or higher
+- Java 21 or higher
 - Maven 3.6.3 or higher
 - Docker (for containerization)
 - [Task](https://taskfile.dev/installation/) (optional, for simplified commands)
