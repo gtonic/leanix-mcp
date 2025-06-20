@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.lgt.leanix_mcp.client.LeanIXClient;
 import com.lgt.leanix_mcp.model.FactSheet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

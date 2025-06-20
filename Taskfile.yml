@@ -12,9 +12,9 @@ tasks:
       - docker build --no-cache -t leanix-mcp:latest .
 
   docker-run:
-    desc: Run the Docker container, exposing port 8080
+    desc: Run the Docker container, exposing port 8080 and loading env vars from .env
     cmds:
-      - docker run --rm -p 8080:8080 leanix-mcp:latest
+      - docker run --rm --env-file .env -p 8080:8080 leanix-mcp:latest
 
   docker-publish:
     desc: Publish the Docker image to a registry (set DOCKER_REGISTRY and IMAGE_NAME env vars)
