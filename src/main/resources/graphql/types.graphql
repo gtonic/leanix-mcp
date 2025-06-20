@@ -1,0 +1,13 @@
+{
+  allFactSheets{
+    filterOptions {
+      facets {
+        facetKey
+        results {
+          name
+          key
+        }
+      }
+    }
+  }
+}

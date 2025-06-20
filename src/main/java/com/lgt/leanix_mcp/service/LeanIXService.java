@@ -20,7 +20,31 @@ import org.springframework.ai.tool.annotation.Tool;
 @RequiredArgsConstructor
 public class LeanIXService {
 
+  public enum FactSheetType {
+    BUSINESS_CAPABILITY("BusinessCapability"),
+    PROCESS("businesscontext"),
+    USER_GROUP("usergroup"),
+    APPLICATION("application"),
+    INTERFACE("interface"),
+    DATA_OBJECT("dataobject"),
+    IT_COMPONENT("itcomponent"),
+    PROVIDER("provider"),
+    TECHNICAL_STACK("TechCategory"),
+    PERSONA("persona");
+
+    private final String searchName;
+
+    FactSheetType(String searchName) {
+      this.searchName = searchName;
+    }
+
+    public String getSearchName() {
+      return searchName;
+    }
+  }
+
   private final LeanIXClient leanIXClient;
+  private final com.lgt.leanix_mcp.config.LeanIXClientConfig leanIXClientConfig;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
   /**
@@ -87,7 +111,11 @@ public class LeanIXService {
 
     Map<String, Object> variables = Map.of("type", factSheetType);
 
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("GraphQL Variables: {}", variables);
     log.info("Fetching fact sheets of type: {}", factSheetType);
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("GraphQL Variables: {}", variables);
     JsonNode result = leanIXClient.query(query, variables);
     return result;
   }
@@ -171,6 +199,8 @@ public class LeanIXService {
 
     Map<String, Object> variables = Map.of("name", searchTerm);
 
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("GraphQL Variables: {}", variables);
     log.info("Searching for fact sheets with term: {}", searchTerm);
     JsonNode result = leanIXClient.query(query, variables);
     return result;
@@ -192,6 +222,56 @@ public class LeanIXService {
       log.error("Error fetching workspace information", e);
       return "Error fetching workspace information: " + e.getMessage();
     }
+  }
+
+  // Explicit MCP tools for each supported factsheet type
+
+  /**
+   * Get paginated fact sheets of a specific type.
+   *
+   * @param factSheetType The type of fact sheet (e.g., "Application", "Persona",
+   *                      etc.)
+   * @param first         Number of items to return (page size)
+   * @param after         Cursor for pagination (null for first page)
+   * @return JsonNode containing pageInfo and edges
+   */
+  @Tool(name = "getFactSheetsByTypePaginated", description = "Get paginated factsheets of a given type. Params: factSheetType (string), first (int), after (string, optional). Returns pageInfo and edges.")
+  public JsonNode getFactSheetsByTypePaginated(String factSheetType, Integer first, String after) {
+    if (factSheetType == null || factSheetType.trim().isEmpty()) {
+      throw new IllegalArgumentException("factSheetType parameter is required");
+    }
+    // Default pagination size to config value if not provided
+    int pageSize = (first != null) ? first : leanIXClientConfig.getPaginationDefaultSize();
+    String query = """
+        query GetFactSheetsByTypePaginated($type: FactSheetType!, $first: Int, $after: String) {
+          allFactSheets(factSheetType: $type, first: $first, after: $after) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            edges {
+              node {
+                id
+                name
+                type
+              }
+            }
+          }
+        }
+        """;
+    Map<String, Object> variables = new java.util.HashMap<>();
+    variables.put("type", factSheetType);
+    variables.put("first", pageSize);
+    if (after != null)
+      variables.put("after", after);
+
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("GraphQL Variables: {}", variables);
+    log.info("Fetching paginated fact sheets of type: {}, first: {}, after: {}", factSheetType, pageSize, after);
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("GraphQL Variables: {}", variables);
+    JsonNode result = leanIXClient.query(query, variables);
+    return result.path("data").path("allFactSheets");
   }
 
   /**
@@ -218,8 +298,157 @@ public class LeanIXService {
         }
         """;
 
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
     log.info("Fetching workspace information (fact sheet counts and overview)");
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
     JsonNode result = leanIXClient.query(query);
     return result;
+  }
+
+  /**
+   * Get all available fact sheet types and their keys from the workspace.
+   * 
+   * @return JsonNode containing the types and keys
+   */
+  @Tool(name = "getTypes", description = "Get all available fact sheet types and their keys from the workspace")
+  public JsonNode getTypes() {
+    try {
+      log.info("Fetching all available fact sheet types and keys");
+      JsonNode result = getTypesInternal();
+      log.info("Successfully fetched types: {}", result.toString());
+      return result.path("data").path("allFactSheets").path("filterOptions").path("facets");
+    } catch (Exception e) {
+      log.error("Error fetching types", e);
+      throw new RuntimeException("Error fetching types: " + e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Internal method to get all available fact sheet types and their keys.
+   * 
+   * @return JsonNode containing the query result
+   */
+  public JsonNode getTypesInternal() {
+    String query = """
+        query {
+          allFactSheets {
+            filterOptions {
+              facets {
+                facetKey
+                results {
+                  name
+                  key
+                }
+              }
+            }
+          }
+        }
+        """;
+
+    log.info("GraphQL Query: {}", query.replaceAll("\\s+", " "));
+    log.info("Fetching all available fact sheet types and keys");
+    JsonNode result = leanIXClient.query(query);
+    return result;
+  }
+
+  /**
+   * Get all applications with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getApplications", description = "Get all applications with default pagination")
+  public java.util.List<FactSheet> getApplications() {
+    return getFactSheetsWithDefaultPaging("Application");
+  }
+
+  /**
+   * Get all IT components with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getITComponents", description = "Get all IT Components with default pagination")
+  public java.util.List<FactSheet> getITComponents() {
+    return getFactSheetsWithDefaultPaging("ITComponent");
+  }
+
+  /**
+   * Get all business capabilities with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getBusinessCapabilities", description = "Get all Business Capabilities with default pagination")
+  public java.util.List<FactSheet> getBusinessCapabilities() {
+    return getFactSheetsWithDefaultPaging("BusinessCapability");
+  }
+
+  /**
+   * Get all providers with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getProviders", description = "Get all Providers with default pagination")
+  public java.util.List<FactSheet> getProviders() {
+    return getFactSheetsWithDefaultPaging("Provider");
+  }
+
+  /**
+   * Get all organizations with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getOrganizations", description = "Get all Organizations with default pagination")
+  public java.util.List<FactSheet> getOrganizations() {
+    return getFactSheetsWithDefaultPaging("UserGroup");
+  }
+
+  /**
+   * Get all business contexts with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getBusinessContexts", description = "Get all Business Contexts with default pagination")
+  public java.util.List<FactSheet> getBusinessContexts() {
+    return getFactSheetsWithDefaultPaging("Process");
+  }
+
+  /**
+   * Get all interfaces with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getInterfaces", description = "Get all Interfaces with default pagination")
+  public java.util.List<FactSheet> getInterfaces() {
+    return getFactSheetsWithDefaultPaging("Interface");
+  }
+
+  /**
+   * Get all data objects with default pagination.
+   *
+   * @return List of FactSheet DTOs
+   */
+  @Tool(name = "getDataObjects", description = "Get all Data Objects with default pagination")
+  public java.util.List<FactSheet> getDataObjects() {
+    return getFactSheetsWithDefaultPaging("DataObject");
+  }
+
+  private java.util.List<FactSheet> getFactSheetsWithDefaultPaging(String factSheetType) {
+    JsonNode result = getFactSheetsByTypePaginated(factSheetType, null, null);
+    try {
+      JsonNode edges = result.path("edges");
+      if (edges.isMissingNode() || !edges.isArray()) {
+        return Collections.emptyList();
+      }
+      java.util.List<FactSheet> factSheets = new ArrayList<>();
+      for (JsonNode edge : edges) {
+        JsonNode node = edge.path("node");
+        FactSheet fs = objectMapper.treeToValue(node, FactSheet.class);
+        factSheets.add(fs);
+      }
+      log.info("Successfully fetched {} fact sheets of type {}", factSheets.size(), factSheetType);
+      return factSheets;
+    } catch (Exception e) {
+      log.error("Error mapping fact sheets of type {}", factSheetType, e);
+      throw new RuntimeException("Error mapping " + factSheetType + ": " + e.getMessage(), e);
+    }
   }
 }

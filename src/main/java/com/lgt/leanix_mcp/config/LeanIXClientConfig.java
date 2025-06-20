@@ -11,6 +11,7 @@ public class LeanIXClientConfig {
 
     private String subdomain;
     private String apiToken;
+    private int paginationDefaultSize = 50;
 
     @Bean
     public LeanIXClient leanIXClient() {
@@ -32,5 +33,13 @@ public class LeanIXClientConfig {
 
     public void setApiToken(String apiToken) {
         this.apiToken = apiToken;
+    }
+
+    public int getPaginationDefaultSize() {
+        return paginationDefaultSize;
+    }
+
+    public void setPaginationDefaultSize(int paginationDefaultSize) {
+        this.paginationDefaultSize = paginationDefaultSize;
     }
 }

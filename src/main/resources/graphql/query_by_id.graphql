@@ -1,0 +1,7 @@
+{
+  factSheet(id: "28fe4aa2-6e46-41a1-a131-72afb3acf256") {
+    id
+    name
+    type
+  }
+}
