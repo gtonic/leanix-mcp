@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.lgt</groupId>
 	<artifactId>leanix-mcp</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.1.0-SNAPSHOT</version>
 	<name>leanix-mcp</name>
 	<description>Leanix MCP Server</description>
 	<url/>
