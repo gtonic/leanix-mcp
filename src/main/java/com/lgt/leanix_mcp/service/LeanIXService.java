@@ -245,6 +245,7 @@ public class LeanIXService {
     String query = """
         query GetFactSheetsByTypePaginated($type: FactSheetType!, $first: Int, $after: String) {
           allFactSheets(factSheetType: $type, first: $first, after: $after) {
+            totalCount
             pageInfo {
               hasNextPage
               endCursor
