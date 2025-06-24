@@ -190,6 +190,69 @@ public class LeanIXService {
                   businessCriticality
                   technicalSuitability
                   functionalSuitability
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on ITComponent {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on UserGroup {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on Persona {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on BusinessCapability {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -268,6 +331,71 @@ public class LeanIXService {
                 createdAt
                 tags {
                   name
+                }
+                ... on Application {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on ITComponent {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on UserGroup {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on Persona {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on BusinessCapability {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }

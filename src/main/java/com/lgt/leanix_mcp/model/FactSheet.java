@@ -16,6 +16,7 @@ public class FactSheet {
     private String status;
     private String lxState;
     private Completion completion;
+    private FactSheet.RelToChild relToChild;
     private String updatedAt;
     private String createdAt;
     private List<Tag> tags;
@@ -78,6 +79,25 @@ public class FactSheet {
     public static class Completion {
         private String completion;
         private Integer percentage;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RelToChild {
+        private List<RelToChildEdge> edges;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RelToChildEdge {
+        private RelToChildNode node;
+    }
+
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public static class RelToChildNode {
+        private String id;
+        private FactSheet factSheet;
     }
 
     @Data
