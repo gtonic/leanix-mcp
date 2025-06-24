@@ -33,6 +33,16 @@ class LeanIXServiceIntegrationTest {
     }
 
     @Test
+    void searchFactSheetsByName_returnsResults() {
+        String searchTerm = "Azure";
+        var result = leanIXService.searchFactSheetsByName(searchTerm);
+        log.debug("searchFactSheetsByName results: {}", result);
+        assertThat(result)
+                .isNotNull()
+                .isNotEmpty();
+    }
+
+    @Test
     void getWorkspaceInfo_returnsWorkspaceInformation() {
         String result = leanIXService.getWorkspaceInfo();
         log.debug("WorkspaceInfo: {}", result);
