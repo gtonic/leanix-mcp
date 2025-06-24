@@ -23,8 +23,8 @@ The following methods in `LeanIXService.java` are exposed as tools for use with 
 
 ## TODOs/know issues
 
-- explicitely model parent-child relations (to get hold of the subfactsheets)
-- support mutation (update, delete)
+- resolution of factsheet relations
+- support for mutation (update, delete)
 
 
 ## Building and Running
