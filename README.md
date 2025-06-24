@@ -90,3 +90,18 @@ If you don't have Task installed, you can use Maven directly:
   ```bash
   mvn spring-boot:run
   ```
+
+## Testing
+
+This project includes both unit and integration tests.
+
+- **Unit tests** (e.g., `LeanIXClientTest`):  
+  These tests mock external dependencies and verify the behavior of individual classes and methods in isolation. They do not require network access or real LeanIX credentials.
+
+- **Integration tests** (e.g., `LeanIXServiceIntegrationTest`):  
+  These tests exercise the full stack, including real HTTP calls to the LeanIX API using the configuration in `src/main/resources/application-test.properties`. They require valid LeanIX credentials and a reachable LeanIX workspace. Integration tests will fail if the API is unreachable or the credentials are invalid.
+
+To run all tests (unit and integration), use:
+```bash
+mvn test
+```
