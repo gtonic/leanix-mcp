@@ -184,12 +184,17 @@ public class LeanIXService {
                   name
                 }
                 ... on Application {
-                  lifecycle {
-                    asString
-                  }
-                  businessCriticality
-                  technicalSuitability
+                  description
+                  displayName
+                  fullName
+                  hubInstance
+                  applicationDeploymentType
+                  Confidentiality
                   functionalSuitability
+                  technicalSuitability
+                  businessCriticality
+                  lxTimeClassification
+                  lxHostingType
                   relToChild {
                     edges {
                       node {
@@ -201,9 +206,194 @@ public class LeanIXService {
                       }
                     }
                   }
-                }
-                ... on ITComponent {
-                  relToChild {
+                  relUsedApplicationsApplicationToPersona {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToTechnicalStack {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToPredecessor {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToSuccessor {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToProcess {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToParent {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToBusinessCapability {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToRequires {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToRequiredBy {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relConsumerApplicationToInterface {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relProviderApplicationToInterface {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToUserGroup {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToProject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToDataObject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToDataObject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToITComponent {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToTechPlatform {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relUsedApplicationsApplicationToPersona {
                     edges {
                       node {
                         id
@@ -215,7 +405,7 @@ public class LeanIXService {
                     }
                   }
                 }
-                ... on UserGroup {
+                ... on BusinessCapability {
                   relToChild {
                     edges {
                       node {
@@ -241,7 +431,20 @@ public class LeanIXService {
                     }
                   }
                 }
-                ... on BusinessCapability {
+                ... on UserGroup {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on ITComponent {
                   relToChild {
                     edges {
                       node {
@@ -333,6 +536,17 @@ public class LeanIXService {
                   name
                 }
                 ... on Application {
+                  description
+                  displayName
+                  fullName
+                  hubInstance
+                  applicationDeploymentType
+                  Confidentiality
+                  functionalSuitability
+                  technicalSuitability
+                  businessCriticality
+                  lxTimeClassification
+                  lxHostingType
                   relToChild {
                     edges {
                       node {
@@ -344,9 +558,194 @@ public class LeanIXService {
                       }
                     }
                   }
-                }
-                ... on ITComponent {
-                  relToChild {
+                  relUsedApplicationsApplicationToPersona {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToTechnicalStack {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToPredecessor {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToSuccessor {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToProcess {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToParent {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToBusinessCapability {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToRequires {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relToRequiredBy {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relConsumerApplicationToInterface {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relProviderApplicationToInterface {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToUserGroup {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToProject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToDataObject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToDataObject {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToITComponent {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relApplicationToTechPlatform {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                  relUsedApplicationsApplicationToPersona {
                     edges {
                       node {
                         id
@@ -358,7 +757,7 @@ public class LeanIXService {
                     }
                   }
                 }
-                ... on UserGroup {
+                ... on BusinessCapability {
                   relToChild {
                     edges {
                       node {
@@ -384,7 +783,20 @@ public class LeanIXService {
                     }
                   }
                 }
-                ... on BusinessCapability {
+                ... on UserGroup {
+                  relToChild {
+                    edges {
+                      node {
+                        id
+                        factSheet {
+                          name
+                          type
+                        }
+                      }
+                    }
+                  }
+                }
+                ... on ITComponent {
                   relToChild {
                     edges {
                       node {
