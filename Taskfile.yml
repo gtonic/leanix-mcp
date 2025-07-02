@@ -9,7 +9,7 @@ tasks:
   docker-build:
     desc: Build the Docker image with no cache
     cmds:
-      - docker build --no-cache -t leanix-mcp:latest .
+      - docker build --platform linux/amd64,linux/arm64 --no-cache -t leanix-mcp:latest .
 
   docker-run:
     desc: Run the Docker container, exposing port 8080 and loading env vars from .env
